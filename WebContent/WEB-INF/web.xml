@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee 
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>LoginServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.LoginServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>TestSubmitServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.TestSubmitServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>TeacherLoginServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.TeacherLoginServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>ScoreSubmitServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.ScoreSubmitServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>ModifyUserServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.ModifyUserServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>ModifyPassServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.ModifyPassServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>RecordQueryServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.RecordQueryServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>AdminLoginServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.AdminLoginServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>UpdateUserServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.UpdateUserServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>UpdateTestServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.UpdateTestServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>AddQuesServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.AddQuesServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<description>This is the description of my J2EE component</description>
+		<display-name>This is the display name of my J2EE component</display-name>
+		<servlet-name>UpdateQuesServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.UpdateQuesServlet</servlet-class>
+	</servlet>
+
+
+
+
+
+
+
+
+
+
+
+
+	<servlet-mapping>
+		<servlet-name>LoginServlet</servlet-name>
+		<url-pattern>/LoginServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TestSubmitServlet</servlet-name>
+		<url-pattern>/TestSubmitServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TeacherLoginServlet</servlet-name>
+		<url-pattern>/TeacherLoginServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ScoreSubmitServlet</servlet-name>
+		<url-pattern>/ScoreSubmitServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ModifyUserServlet</servlet-name>
+		<url-pattern>/ModifyUserServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ModifyPassServlet</servlet-name>
+		<url-pattern>/ModifyPassServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>RecordQueryServlet</servlet-name>
+		<url-pattern>/RecordQueryServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AdminLoginServlet</servlet-name>
+		<url-pattern>/AdminLoginServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UpdateUserServlet</servlet-name>
+		<url-pattern>/UpdateUserServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UpdateTestServlet</servlet-name>
+		<url-pattern>/UpdateTestServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AddQuesServlet</servlet-name>
+		<url-pattern>/AddQuesServlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>UpdateQuesServlet</servlet-name>
+		<url-pattern>/UpdateQuesServlet</url-pattern>
+	</servlet-mapping>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<servlet>
+		<servlet-name>UploadHandleServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.UploadHandleServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>UploadHandleServlet</servlet-name>
+		<url-pattern>/UploadHandleServlet</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>CheckUserServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.CheckUserServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CheckUserServlet</servlet-name>
+		<url-pattern>/checkUser</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DownloadServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.DownloadServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DownloadServlet</servlet-name>
+		<url-pattern>/DownloadServlet</url-pattern>
+	</servlet-mapping>
+	
+	
+	<servlet>
+		<servlet-name>CalEachQuesTypeCountServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.CalEachQuesTypeCountServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CalEachQuesTypeCountServlet</servlet-name>
+		<url-pattern>/calEachQuesTypeCount</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>ResetPwdServlet</servlet-name>
+		<servlet-class>com.xurui.servlet.ResetPwdServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ResetPwdServlet</servlet-name>
+		<url-pattern>/resetPwd</url-pattern>
+	</servlet-mapping>
+	
+	
+
+</web-app>

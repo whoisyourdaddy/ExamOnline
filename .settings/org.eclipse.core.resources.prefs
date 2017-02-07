@@ -1,0 +1,9 @@
+eclipse.preferences.version=1
+encoding//WebContent/css/public.css=UTF-8
+encoding//WebContent/exam_online.sql=GBK
+encoding//WebContent/js/question_set.js=UTF-8
+encoding//WebContent/student/Fail.html=GBK
+encoding//WebContent/teacher/showTest.jsp=UTF-8
+encoding//WebContent/\u53C2\u7167\u6587\u5E93.txt=UTF-8
+encoding//src/com/xurui/servlet/ScoreSubmitServlet.java=UTF-8
+encoding//src/com/xurui/util/JdbcUtil.java=UTF-8

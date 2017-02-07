@@ -1,0 +1,38 @@
+--试题库
+select * from QUESTION t where course='java' order by qtype ;
+--考试成绩
+select *　from recordtest  where userid='2011110531' and course='java';
+--考试科目题型设计
+select * from test_set where course='java';
+--学生答题记录
+select *　from test  where userid='2011110531' and course='java';
+--用户表
+select * from userinfo where userid='2011110531' ;
+--学生考试记录状态表
+select *  from userflag where userid='2011110531';
+
+  修改:
+编码统一UTF-8(Eclipse workspace 、项目编码)
+
+①学生管理模块
+   登录账号设为身份证号码/手机号码  注册时添加不能重复验证
+   
+④管理员后台试题支持excel导入试题
+
+②学生考试模块 
+   考试添加考试时间（为了支持java多次考试）
+      设计改动表:recordtest、test_set、test、userflag
+  
+③教师管理
+   老师阅卷（每个学生多条数据 根据学号和考试时间分组 ）
+      加入分页
+	  
+
+
+
+  后期:
+⑤试题库加入[填空题] 
+
+⑥加入日语考试
+   
+   

@@ -1,0 +1,45 @@
+-- Add/modify 
+--用户编号默认手机号码
+alter table USERINFO modify userid VARCHAR2(11);
+-- Add/modify columns 
+alter table USERFLAG modify userid VARCHAR2(11);
+-- Add/modify columns 
+alter table TEST modify userid VARCHAR2(11);
+-- Add/modify columns 
+alter table RECORDTEST modify userid VARCHAR2(11);
+
+-- Add/modify columns 
+--加入考试时间
+alter table USERFLAG add test_time VARCHAR2(15);
+update  USERFLAG set test_time =to_char(sysdate,'yyyy/mm/dd');
+commit;
+
+-- Add/modify columns 
+--加入考试时间
+alter table TEST_SET add test_time varchar2(15);
+update  TEST_SET set test_time =to_char(sysdate,'yyyy/mm/dd');
+commit;
+
+-- Add/modify columns 
+--加入考试时间
+alter table TEST add test_time varchar2(15);
+update  TEST set test_time =to_char(sysdate,'yyyy/mm/dd');
+commit;
+
+-- Add/modify columns 
+--加入考试时间
+alter table RECORDTEST add test_time varchar2(15);
+update  RECORDTEST set test_time =to_char(sysdate,'yyyy/mm/dd');
+commit;
+--修改密码长度(md5加密)
+-- Add/modify columns 
+alter table USERINFO modify password VARCHAR2(40);
+update USERINFO set password = 'e10adc3949ba59abbe56e057f20f883e';
+commit;
+
+--将题库选项字段设置300
+-- Add/modify columns 
+alter table QUESTION modify keya VARCHAR2(300);
+alter table QUESTION modify keyb VARCHAR2(300);
+alter table QUESTION modify keyc VARCHAR2(300);
+alter table QUESTION modify keyd VARCHAR2(300);
