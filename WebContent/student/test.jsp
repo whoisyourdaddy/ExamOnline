@@ -8,230 +8,450 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 String course = (String)session.getAttribute("course");
 String Uid = (String)session.getAttribute("Uid");
 String name = (String)session.getAttribute("name");
-String test_time  =(String) session.getAttribute("test_time");
+String test_time = (String) session.getAttribute("test_time");
 TestSetUtil testUtil = new TestSetUtil();
 TestSet ts = null;
-if(course!=null&&Uid!=null&&name!=null)
-{
- ts = testUtil.getTestSet(course.trim(),test_time.trim());
- ArrayList al=null;
- QuestionUtil questionUtil = new QuestionUtil();
- Question qs = new Question();
+if(course != null && Uid != null && name != null) {
+    ts = testUtil.getTestSet(course.trim(), test_time.trim());
+    ArrayList al = null;
+    QuestionUtil questionUtil = new QuestionUtil();
+    Question qs = new Question();
 %>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
-  <head>
-    <base href="<%=basePath%>">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%=course%> - 在线考试</title>
+<link rel="stylesheet" href="<%=path%>/css/modern.css">
+<style>
+.exam-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: var(--white);
+    min-height: 100vh;
+    box-shadow: var(--shadow-xl);
+}
+.exam-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.exam-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.exam-info {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.875rem;
+    align-items: center;
+}
+.exam-timer {
+    background-color: rgba(255,255,255,0.2);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    font-family: monospace;
+    font-size: 1.125rem;
+}
+.exam-body {
+    padding: 2rem;
+}
+.exam-section {
+    margin-bottom: 3rem;
+}
+.exam-section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    padding: 0.875rem 1.25rem;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+    color: white;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+}
+.question-item {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background-color: var(--gray-50);
+    border-radius: var(--radius);
+    border-left: 4px solid var(--primary-color);
+}
+.question-text {
+    font-size: 1rem;
+    color: var(--gray-800);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-weight: 500;
+}
+.question-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background-color: var(--white);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+}
+.option-item:hover {
+    border-color: var(--primary-color);
+    background-color: #eef2ff;
+}
+.option-item input[type="radio"],
+.option-item input[type="checkbox"] {
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: 0.125rem;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+.option-item label {
+    cursor: pointer;
+    flex: 1;
+    color: var(--gray-700);
+}
+.textarea-answer {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 150px;
+    font-family: inherit;
+}
+.textarea-answer:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.exam-footer {
+    padding: 1.5rem 2rem;
+    background-color: var(--white);
+    border-top: 2px solid var(--gray-200);
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    bottom: 0;
+}
+.btn-submit {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    color: white;
+    padding: 1rem 3rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: var(--shadow-md);
+}
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+.progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--success-color), var(--secondary-color));
+    z-index: 101;
+    transition: width 0.3s;
+}
+</style>
+<script type="text/javascript">
+var total = <%=ts.getTotaltime()%> * 60;
+var show;
+var timerInterval;
+
+function setTime() {
+    var h = parseInt(total / 3600);
+    var hh = h < 10 ? "0" + h : h;
+    var m = parseInt((total % 3600) / 60);
+    var mm = m < 10 ? "0" + m : m;
+    var s = (total % 3600) % 60;
+    var ss = s < 10 ? "0" + s : s;
     
-    <title>在线考试系统-在线测试</title>
-    <style type="text/css">
-      body{background-image: url("<%=path%>/images/bk1.jpg"); background-repeat: repeat-y;}
-      .title{text-align:center;height:50px;}
-      .head{height:30px;width:1000px;margin:20px;padding-left:100px;padding-right:80px;}
-      .main{width:1000px;margin:auto;padding-left:100px;padding-right:50px;}
-      .datikuang{color:gray;}
-    </style>
-    <script type="text/javascript">
-       var total = <%=ts.getTotaltime()%>*60;
-       var show;
-      function setTime()
-      {
-       var h = parseInt(total/3600);
-       var hh;
-       if(h<10)
-       {
-         hh ="0"+h;
-       }else
-       {
-         hh=h+"";
-       }
-       var m = parseInt((total%3600)/60);
-       var mm;
-       if(m<10)
-       {
-         mm = "0"+m;
-       }
-       else
-       {
-         mm = ""+m;
-       }
-       var s = (total%3600)%60;
-       var ss;
-       if(s<10)
-       {
-         ss = "0"+s;
-       }
-       else
-       { ss = ""+s;
-       }
-       if(total==0)
-       {
-        toSumbmit();
-       }
-       else
-       {
+    if(total <= 0) {
+        toSubmit();
+    } else {
         total = total - 1;
-        document.getElementById("timeSpan").innerHTML = hh+":"+mm+":"+ss;
-       }
-     }
-      
-     function edit(obj)
-     {
-       obj.innerHTML = "";
-       obj.style.color="black";
-     }
-     function submitTest()
-     {
-       if(confirm("检查好试卷,确认交卷?"))
-       {
-         document.forms[0].submit();
-       }
-     }
-     function toSumbmit()
-     {
-       clearInterval(show);
-       //alert("考试时间到,试卷已提交!请离开考场!");
-       document.forms[0].submit();
-       
-     }
-     function setIner()
-     {
-       show=setInterval(setTime,1000);
-     }
-    </script>
-  </head>
-  
-  <body onload="setIner()">
-   
-     <div class="title">
-      <h2><%=course%>程序设计考试卷</h2>
-    </div>
-    <hr>
-    <div class="head">
-      <span style="margin-right:100px;"><strong>学号:</strong><%=Uid%></span>
-      <span><strong>考生姓名:</strong><%=name%></span>
-      <span style="margin-left:60px;"><strong>考试日期:<%=test_time %></strong></span>
-      <span style="margin-left:60px;"><strong>考试剩余时间:</strong></span>
-      <span id="timeSpan" style="color:red"></span>
-    </div>
-    <form action="<%=path%>/TestSubmitServlet" method="post">
-    <div class="main">
-        <%
-         int typeCount  =1;
-        %>
+        document.getElementById("timeSpan").innerHTML = hh + ":" + mm + ":" + ss;
+        
+        // 时间少于5分钟变红色警告
+        if(total < 300) {
+            document.getElementById("timeSpan").style.backgroundColor = "rgba(239, 68, 68, 0.3)";
+        }
+    }
+}
+
+function submitTest() {
+    // 检查是否有未作答的题目
+    var unanswered = 0;
+    var radios = document.querySelectorAll('input[type="radio"]');
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    var textareas = document.querySelectorAll('textarea');
     
-     <% if(ts.getJudgeCount()!=0){%>
-      <div class="judge" style="margin-top:20px;">
-         <strong><%= Common.getTypeCount(typeCount) %>、判断题</strong> (共<%=ts.getJudgeCount()%>题，每题<%=ts.getPerJudScore()%>分)
-         <%
-           al = questionUtil.getQuestion2(course,ts.getJudgeCount(),3);
-           for(int i=0;i<al.size();i++)
-           {
-            qs = (Question)al.get(i);
-          %> 
-          <div name="stuJudge<%=i%>" style="width:900px;word-break:break-all;margin-top:20px;"><%=i+1%>.<%=qs.getQues().trim()%></div>
-          <input type="radio" name="judge<%=i%>Value" value="yes"/>是<%=qs.getQues().trim()%><br/>
-          <input type="radio" name="judge<%=i%>Value" value="no"/>不是<br/>
-          <input type="hidden" value="<%=qs.getId()%>" name="judgeId<%=i%>"/>
-         <%--  <input type="hidden" value="<%=qs.getAnswer()==null?"":qs.getAnswer().trim()%>" name="judgeAnswer<%=i%>"/> --%>
-         <%}%>
-         <% typeCount++;%>
-       </div>
-       <%}%>
-       
-       <% if(ts.getSinChCount()!=0){%>
-      <div class="singleChoice">
-        <strong><%= Common.getTypeCount(typeCount) %>、单选题</strong> (共<%=ts.getSinChCount()%>题，每题<%=ts.getPerSinScore()%>分)
-        <%
-          al = questionUtil.getQuestion2(course,ts.getSinChCount(),1);
-          for(int i=0;i<al.size();i++)
-          {
-            qs = (Question)al.get(i);
-         %>
-          <div name="stuChoice<%=i%>" style="width:900px;word-break:break-all;margin-top:20px;"><%=i+1%>.<%=qs.getQues().trim()%></div>
-          <input type="radio" name="choice<%=i%>Value" value="A"/>A.<%=qs.getKeyA()==null?"":qs.getKeyA().trim()%><br/>
-          <input type="radio" name="choice<%=i%>Value" value="B"/>B.<%=qs.getKeyB()==null?"":qs.getKeyB().trim()%><br/>
-          <input type="radio" name="choice<%=i%>Value" value="C"/>C.<%=qs.getKeyC()==null?"":qs.getKeyC().trim()%><br/>
-          <input type="radio" name="choice<%=i%>Value" value="D"/>D.<%=qs.getKeyD()==null?"":qs.getKeyD().trim()%><br/>
-          <input type="hidden" value="<%=qs.getId()%>" name="choiceId<%=i%>"/>
+    if(confirm("确定要交卷吗？请确认所有题目已作答。")) {
+        clearInterval(show);
+        document.forms[0].submit();
+    }
+}
 
-         <%--  <input type="hidden" value="<%=qs.getAnswer()==null?"":qs.getAnswer().trim()%>" name="choiceAnswer<%=i%>"/> --%>
+function toSubmit() {
+    clearInterval(show);
+    alert("考试时间到，系统将自动交卷！");
+    document.forms[0].submit();
+}
 
-          <%-- <input type="hidden" value="<%=qs.getAnswer()==null?"":qs.getAnswer().trim()%>" name="choiceAnswer<%=i%>"/> --%>
+function setTimer() {
+    show = setInterval(setTime, 1000);
+}
 
-         
-         <%}%>
-         <% typeCount++;%>
-       </div>
-        <%}%>
-       
-       
-       <% if(ts.getMulChCount()!=0){%>
-       <div class="multiplyChoice" style="margin-top:30px;">
-         <strong><%= Common.getTypeCount(typeCount) %>、多选题</strong> (共<%=ts.getMulChCount()%>题，每题<%=ts.getPerMulScore()%>分) 
-         <%
-           al = questionUtil.getQuestion2(course,ts.getMulChCount(),2);
-           for(int i=0;i<al.size();i++)
-           {
-            qs = (Question)al.get(i);
-          %>
-          <div name="stuMulChoice<%=i%>" style="width:900px;word-break:break-all;margin-top:20px;"><%=i+1%>.<%=qs.getQues().trim()%></div>
-          <input type="checkbox" name="mulchoice<%=i%>Value" value="A"/>A.<%=qs.getKeyA()==null?"":qs.getKeyA().trim()%><br/>
-          <input type="checkbox" name="mulchoice<%=i%>Value" value="B"/>B.<%=qs.getKeyB()==null?"":qs.getKeyB().trim()%><br/>
-          <input type="checkbox" name="mulchoice<%=i%>Value" value="C"/>C.<%=qs.getKeyC()==null?"":qs.getKeyC().trim()%><br/>
-          <input type="checkbox" name="mulchoice<%=i%>Value" value="D"/>D.<%=qs.getKeyD()==null?"":qs.getKeyD().trim()%><br/>
-          <input type="hidden" value="<%=qs.getId()%>" name="mulchoiceId<%=i%>"/>
-         <%--  <input type="hidden" value="<%=qs.getAnswer()==null?"":qs.getAnswer().trim()%>" name="mulchoiceAnswer<%=i%>"/> --%>
-         <%}%>
-         <% typeCount++;%>
-       </div>
-       <%} %>
-       
-       <% if(ts.getJdCount()!=0){%>
-       <div class="jianda" style="margin-top:20px;">
-         <strong><%= Common.getTypeCount(typeCount) %>、简答题</strong> (共<%=ts.getJdCount()%>题，每题<%=ts.getPerJdScore()%>分) 
-         <%
-           al = questionUtil.getQuestion2(course,ts.getJdCount(),4);
-           for(int i=0;i<al.size();i++)
-           {
-            qs = (Question)al.get(i);
-          %> 
-          <div name="stuJd<%=i%>" style="width:900px;word-break:break-all;margin-top:20px;"><%=i+1%>.<%=qs.getQues().trim()%></div>
-          <textarea name="stuJdAnswer<%=i%>" cols="120" rows="5" class="datikuang" onfocus="edit(this)">==请在此答题==</textarea>
-          <input type="hidden" value="<%=qs.getId()%>" name="jdId<%=i%>"/>
-         <%}%>
-         <% typeCount++;%>
-       </div>
-       <%} %>
-       
-       <% if(ts.getProgramCount()!=0){%>
-       <div class="multiplyChoice" style="margin-top:20px;">
-         <strong><%= Common.getTypeCount(typeCount) %>、编程题(核心代码/思想)</strong> (共<%=ts.getProgramCount() %>题，每题<%=ts.getPerProScore()%>分) 
-         <%
-           al = questionUtil.getQuestion2(course,ts.getProgramCount(),5);
-           for(int i=0;i<al.size();i++)
-           {
-            qs = (Question)al.get(i);
-          %> 
-          <div name="stuPro<%=i%>" style="width:900px;word-break:break-all;margin-top:20px;"><%=i+1%>.<%=qs.getQues().trim()%></div>
-          <textarea name="stuProAnswer<%=i%>" cols="120" rows="10" class="datikuang" onfocus="edit(this)">==请在此答题==</textarea>
-          <input type="hidden" value="<%=qs.getId()%>" name="proId<%=i%>"/><br><br>
-         <%}%>
-         <% typeCount++;%>
-       </div>
-       <%} %>
-       
-       
-       <div style="text-align: right;"><input type="button" value="交卷" style="width:80px;height:50px;font-size: 20px;" onclick="submitTest()"/></div>
+function clearPlaceholder(obj) {
+    if(obj.value == "==请在此答题==") {
+        obj.value = "";
+    }
+    obj.style.color = "var(--gray-800)";
+}
+
+// 更新进度条
+function updateProgress() {
+    var totalQuestions = document.querySelectorAll('.question-item').length;
+    var answered = 0;
+    
+    // 统计已作答
+    var radioGroups = {};
+    document.querySelectorAll('input[type="radio"]:checked').forEach(function(r) {
+        radioGroups[r.name] = true;
+    });
+    answered += Object.keys(radioGroups).length;
+    
+    document.querySelectorAll('input[type="checkbox"]:checked').forEach(function() {
+        answered++;
+    });
+    
+    document.querySelectorAll('textarea').forEach(function(t) {
+        if(t.value && t.value != "==请在此答题==") answered++;
+    });
+    
+    var percent = (answered / totalQuestions) * 100;
+    document.getElementById('progressBar').style.width = percent + '%';
+}
+
+window.onload = function() {
+    setTimer();
+    
+    // 绑定进度更新事件
+    document.querySelectorAll('input, textarea').forEach(function(el) {
+        el.addEventListener('change', updateProgress);
+        el.addEventListener('input', updateProgress);
+    });
+};
+</script>
+</head>
+<body>
+<div id="progressBar" class="progress-bar" style="width: 0%;"></div>
+
+<div class="exam-container">
+    <div class="exam-header">
+        <div class="exam-title"><%=course%> 考试</div>
+        <div class="exam-info">
+            <span>学号: <%=Uid%></span>
+            <span>姓名: <%=name%></span>
+            <span>日期: <%=test_time%></span>
+            <span class="exam-timer" id="timeSpan">--:--:--</span>
+        </div>
+    </div>
+
+    <form action="<%=path%>/TestSubmitServlet" method="post">
+    <div class="exam-body">
+        <% int typeCount = 1; %>
+
+        <% if(ts.getJudgeCount() != 0) { %>
+        <div class="exam-section">
+            <div class="exam-section-title">
+                <%= Common.getTypeCount(typeCount) %>、判断题 (共<%=ts.getJudgeCount()%>题，每题<%=ts.getPerJudScore()%>分)
+            </div>
+            <%
+            al = questionUtil.getQuestion2(course, ts.getJudgeCount(), 3);
+            for(int i = 0; i < al.size(); i++) {
+                qs = (Question)al.get(i);
+            %>
+            <div class="question-item">
+                <div class="question-text"><%=i+1%>. <%=qs.getQues().trim()%></div>
+                <div class="question-options">
+                    <label class="option-item">
+                        <input type="radio" name="judge<%=i%>Value" value="yes">
+                        <span>正确</span>
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="judge<%=i%>Value" value="no">
+                        <span>错误</span>
+                    </label>
+                </div>
+                <input type="hidden" value="<%=qs.getId()%>" name="judgeId<%=i%>"/>
+            </div>
+            <% } %>
+            <% typeCount++; %>
+        </div>
+        <% } %>
+
+        <% if(ts.getSinChCount() != 0) { %>
+        <div class="exam-section">
+            <div class="exam-section-title">
+                <%= Common.getTypeCount(typeCount) %>、单选题 (共<%=ts.getSinChCount()%>题，每题<%=ts.getPerSinScore()%>分)
+            </div>
+            <%
+            al = questionUtil.getQuestion2(course, ts.getSinChCount(), 1);
+            for(int i = 0; i < al.size(); i++) {
+                qs = (Question)al.get(i);
+            %>
+            <div class="question-item">
+                <div class="question-text"><%=i+1%>. <%=qs.getQues().trim()%></div>
+                <div class="question-options">
+                    <% if(qs.getKeyA() != null && !qs.getKeyA().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="radio" name="choice<%=i%>Value" value="A">
+                        <span>A. <%=qs.getKeyA().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyB() != null && !qs.getKeyB().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="radio" name="choice<%=i%>Value" value="B">
+                        <span>B. <%=qs.getKeyB().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyC() != null && !qs.getKeyC().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="radio" name="choice<%=i%>Value" value="C">
+                        <span>C. <%=qs.getKeyC().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyD() != null && !qs.getKeyD().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="radio" name="choice<%=i%>Value" value="D">
+                        <span>D. <%=qs.getKeyD().trim()%></span>
+                    </label>
+                    <% } %>
+                </div>
+                <input type="hidden" value="<%=qs.getId()%>" name="choiceId<%=i%>"/>
+            </div>
+            <% } %>
+            <% typeCount++; %>
+        </div>
+        <% } %>
+
+        <% if(ts.getMulChCount() != 0) { %>
+        <div class="exam-section">
+            <div class="exam-section-title">
+                <%= Common.getTypeCount(typeCount) %>、多选题 (共<%=ts.getMulChCount()%>题，每题<%=ts.getPerMulScore()%>分)
+            </div>
+            <%
+            al = questionUtil.getQuestion2(course, ts.getMulChCount(), 2);
+            for(int i = 0; i < al.size(); i++) {
+                qs = (Question)al.get(i);
+            %>
+            <div class="question-item">
+                <div class="question-text"><%=i+1%>. <%=qs.getQues().trim()%> <small style="color: var(--gray-500);">(多选)</small></div>
+                <div class="question-options">
+                    <% if(qs.getKeyA() != null && !qs.getKeyA().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="checkbox" name="mulchoice<%=i%>Value" value="A">
+                        <span>A. <%=qs.getKeyA().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyB() != null && !qs.getKeyB().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="checkbox" name="mulchoice<%=i%>Value" value="B">
+                        <span>B. <%=qs.getKeyB().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyC() != null && !qs.getKeyC().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="checkbox" name="mulchoice<%=i%>Value" value="C">
+                        <span>C. <%=qs.getKeyC().trim()%></span>
+                    </label>
+                    <% } %>
+                    <% if(qs.getKeyD() != null && !qs.getKeyD().trim().isEmpty()) { %>
+                    <label class="option-item">
+                        <input type="checkbox" name="mulchoice<%=i%>Value" value="D">
+                        <span>D. <%=qs.getKeyD().trim()%></span>
+                    </label>
+                    <% } %>
+                </div>
+                <input type="hidden" value="<%=qs.getId()%>" name="mulchoiceId<%=i%>"/>
+            </div>
+            <% } %>
+            <% typeCount++; %>
+        </div>
+        <% } %>
+
+        <% if(ts.getJdCount() != 0) { %>
+        <div class="exam-section">
+            <div class="exam-section-title">
+                <%= Common.getTypeCount(typeCount) %>、简答题 (共<%=ts.getJdCount()%>题，每题<%=ts.getPerJdScore()%>分)
+            </div>
+            <%
+            al = questionUtil.getQuestion2(course, ts.getJdCount(), 4);
+            for(int i = 0; i < al.size(); i++) {
+                qs = (Question)al.get(i);
+            %>
+            <div class="question-item">
+                <div class="question-text"><%=i+1%>. <%=qs.getQues().trim()%></div>
+                <textarea name="stuJdAnswer<%=i%>" class="textarea-answer" onfocus="clearPlaceholder(this)">==请在此答题==</textarea>
+                <input type="hidden" value="<%=qs.getId()%>" name="jdId<%=i%>"/>
+            </div>
+            <% } %>
+            <% typeCount++; %>
+        </div>
+        <% } %>
+
+        <% if(ts.getProgramCount() != 0) { %>
+        <div class="exam-section">
+            <div class="exam-section-title">
+                <%= Common.getTypeCount(typeCount) %>、编程题 (共<%=ts.getProgramCount()%>题，每题<%=ts.getPerProScore()%>分)
+            </div>
+            <%
+            al = questionUtil.getQuestion2(course, ts.getProgramCount(), 5);
+            for(int i = 0; i < al.size(); i++) {
+                qs = (Question)al.get(i);
+            %>
+            <div class="question-item">
+                <div class="question-text"><%=i+1%>. <%=qs.getQues().trim()%></div>
+                <textarea name="stuProAnswer<%=i%>" class="textarea-answer" rows="10" onfocus="clearPlaceholder(this)">==请在此答题==</textarea>
+                <input type="hidden" value="<%=qs.getId()%>" name="proId<%=i%>"/>
+            </div>
+            <% } %>
+            <% typeCount++; %>
+        </div>
+        <% } %>
+    </div>
+
+    <div class="exam-footer">
+        <button type="button" class="btn-submit" onclick="submitTest()">交 卷</button>
     </div>
     </form>
+</div>
 </body>
 </html>
 <%
- }else
- {
-   response.sendRedirect(path+"/student/login.jsp");
- }
- %>
-
+} else {
+    response.sendRedirect(path+"/student/login.jsp");
+}
+%>
