@@ -5,118 +5,176 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
-<style type="text/css">
-  a{
-    text-decoration:none;
-    color:#2f4867;
-	}
-  li{
-  list-style-image:url("<%=path%>/images/list.gif");
-  margin-top:5px;
-  font-size:12px;
-  }
-  ul{
-    margin-top:0px;
-	display:none;
-   }
-  .first
-  {
-    background-image:url("<%=path%>/images/bk2.gif");
-    background-repeat:no-repeat;
-	padding-left:22px;
-	height:23px;
-	width:142px;
-	margin-left:2px;
-	margin-top:5px;
-	padding-right:0px;
-	line-height:23px;
-	font-size:12px;
-	color:#155a84;
-	cursor:pointer;
-  }
-  .outer
-  {
-    width:166px;
-	background-color:#FFFFFF;
-	margin-left:2px;
-	margin-top:5px;
-	padding-top:5px;
-	padding-right:0px;
-  }
-  body
-  {
-    background-color:#06a9f4;
-    overflow-x:hidden;
-    SCROLLBAR-FACE-COLOR: #59D6FF; 
-	SCROLLBAR-HIGHLIGHT-COLOR: #ffffff; 
-	SCROLLBAR-SHADOW-COLOR: #ffffff; 
-	SCROLLBAR-3DLIGHT-COLOR: #007BC6; 
-	SCROLLBAR-DARKSHADOW-COLOR: #007BC6; 
-	SCROLLBAR-ARROW-COLOR: #007BC6;
-	SCROLLBAR-TRACK-COLOR: #009ED2;
-    
-  }
-  #submenu1,#submenu2,#submenu3
-  {
-    display:block;
-  }
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>左侧菜单</title>
+<link rel="stylesheet" href="<%=path%>/css/modern.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #f8fafc;
+    min-height: 100vh;
+}
+.sidebar {
+    width: 220px;
+    background-color: white;
+    min-height: 100vh;
+    border-right: 1px solid #e2e8f0;
+}
+.menu-item {
+    border-bottom: 1px solid #f1f5f9;
+}
+.menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #475569;
+}
+.menu-header:hover {
+    background-color: #f8fafc;
+    color: #4f46e5;
+}
+.menu-header.active {
+    background-color: #eef2ff;
+    color: #4f46e5;
+    border-left: 3px solid #4f46e5;
+}
+.menu-icon {
+    font-size: 1.125rem;
+    margin-right: 0.75rem;
+}
+.menu-arrow {
+    font-size: 0.75rem;
+    transition: transform 0.2s;
+}
+.menu-header.active .menu-arrow {
+    transform: rotate(90deg);
+}
+.submenu {
+    display: none;
+    background-color: #f8fafc;
+    padding: 0.5rem 0;
+}
+.submenu.active {
+    display: block;
+}
+.submenu a {
+    display: block;
+    padding: 0.625rem 1.25rem 0.625rem 3rem;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+.submenu a:hover {
+    color: #4f46e5;
+    background-color: #eef2ff;
+    border-left-color: #4f46e5;
+}
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 220px;
+    padding: 1rem;
+    background-color: white;
+    border-top: 1px solid #e2e8f0;
+}
+.logout-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem;
+    color: #ef4444;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+}
+.logout-btn:hover {
+    background-color: #fef2f2;
+}
 </style>
 <script type="text/javascript">
-  function show(showId)
-  {
-    var des = document.getElementById(showId);
-	if(des.style.display=="block")
-	{
-	  des.style.display = "none";
-	}else
-	{
-	  des.style.display="block";
-	}
+function toggleMenu(menuId) {
+    var submenu = document.getElementById(menuId);
+    var header = submenu.previousElementSibling;
     
-  }
-  
+    // 关闭其他菜单
+    document.querySelectorAll('.submenu').forEach(function(el) {
+        if(el.id !== menuId) {
+            el.classList.remove('active');
+            el.previousElementSibling.classList.remove('active');
+        }
+    });
+    
+    // 切换当前菜单
+    submenu.classList.toggle('active');
+    header.classList.toggle('active');
+}
 </script>
 </head>
-
 <body>
- <div class="outer">
-   <div class="first" onclick="show('submenu1')">试题管理</div>
-	  <ul id="submenu1">
-	    <li><a href="ManageQuestion.jsp" target="right">试题管理</a></li>
-	  </ul>
-   </div>
-   <div class="outer">
-     <div class="first"  onclick="show('submenu2')">考试设置管理</div>
-	  <ul id="submenu2">
-	    <li><a href="ManageTest.jsp" target="right">考试设置管理</a></li>
-	  </ul>
-	</div>
-	   <div class="outer">
-     <div class="first"  onclick="show('submenu3')">用户管理</div>
-	  <ul id="submenu3">
-	    <li><a href="ManageUser.jsp" target="right">用户管理</a></li>
-	  </ul>
-	</div>
-    <div class="outer">
-	  <div class="first"  onclick="show('submenu4')">个人信息维护</div>
-	  <ul id="submenu4">
-	    <li><a href="<%=path%>/modifyInfo.jsp" target="right">修改个人信息</a></li>
-		<li><a href="<%=path%>/modifyPassword.jsp?type=3" target="right">修改密码</a></li>
-	  </ul>
-	</div>
-	<div class="outer">
-      <div class="first" onclick="show('submenu5')">安全退出</div>
-      <ul id="submenu5">
-        <li><a href="javascript:window.open('login.jsp');window.parent.opener=null;window.parent.close();">安全退出</a></li>
-      </ul>
+<div class="sidebar">
+    <div class="menu-item">
+        <div class="menu-header active" onclick="toggleMenu('submenu1')">
+            <span><span class="menu-icon">📝</span>试题管理</span>
+            <span class="menu-arrow">▶</span>
+        </div>
+        <div class="submenu active" id="submenu1">
+            <a href="ManageQuestion.jsp" target="right">试题列表</a>
+            <a href="AddQuestion.jsp" target="right">添加试题</a>
+            <a href="piLiangAddQuestion.jsp" target="right">批量导入</a>
+        </div>
     </div>
-  
+    
+    <div class="menu-item">
+        <div class="menu-header" onclick="toggleMenu('submenu2')">
+            <span><span class="menu-icon">⚙️</span>考试设置</span>
+            <span class="menu-arrow">▶</span>
+        </div>
+        <div class="submenu" id="submenu2">
+            <a href="ManageTest.jsp" target="right">考试安排</a>
+        </div>
+    </div>
+    
+    <div class="menu-item">
+        <div class="menu-header" onclick="toggleMenu('submenu3')">
+            <span><span class="menu-icon">👥</span>用户管理</span>
+            <span class="menu-arrow">▶</span>
+        </div>
+        <div class="submenu" id="submenu3">
+            <a href="ManageUser.jsp" target="right">用户列表</a>
+        </div>
+    </div>
+    
+    <div class="menu-item">
+        <div class="menu-header" onclick="toggleMenu('submenu4')">
+            <span><span class="menu-icon">🔧</span>个人设置</span>
+            <span class="menu-arrow">▶</span>
+        </div>
+        <div class="submenu" id="submenu4">
+            <a href="<%=path%>/modifyInfo.jsp" target="right">修改信息</a>
+            <a href="<%=path%>/modifyPassword.jsp?type=3" target="right">修改密码</a>
+        </div>
+    </div>
+    
+    <div class="sidebar-footer">
+        <a href="javascript:window.parent.location.href='login.jsp';" class="logout-btn">
+            <span>🚪</span>
+            <span>退出登录</span>
+        </a>
+    </div>
+</div>
 </body>
 </html>
-

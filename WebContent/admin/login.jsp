@@ -1,165 +1,91 @@
 <%@page contentType="text/html; charset=utf-8"%>
+<%
+  String path = request.getContextPath();
+%>
+<!DOCTYPE html>
 <html>
-
 <head>
-  <title>在线考试系统-用户登陆</title>
-  <link href="<%=request.getContextPath()%>/images/css1.css" type="text/css" rel="stylesheet"/>
-  <link href="<%=request.getContextPath()%>/images/newhead.css" type="text/css" rel="stylesheet"/>
-  <style type="text/css">
-    #validate{
-      color:black;
-      font-style:italic;
-      font-weight:bold;
-      font-size:16px;
-      letter-spacing:3px;
-      width:80px;
-      text-align:center;
-      border:0px;
-      background-image: url("../images/validate.jpg");
-     }
-  </style>
-  
-  <script language="JavaScript">
-      function submit() {
-        var userName = document.forms[0].UserName;
-        var password = document.forms[0].Password;
-        var validate1 = document.forms[0].validate1;
-        var validate = document.forms[0].validate;
-        if(userName.value=="")
-        {
-          alert("请输入用户名!");
-          userName.focus();
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>管理员登录 - 在线考试系统</title>
+<link rel="stylesheet" href="<%=path%>/css/modern.css">
+<script language="JavaScript">
+    function createCaptcha() {
+        var str = getRandom();
+        document.getElementById("validate").value = str;
+    }
+
+    function getRandom() {
+        var i = 65 + Math.round(Math.random() * 25);
+        var j = 97 + Math.round(Math.random() * 25);
+        var k = 48 + Math.round(Math.random() * 9);
+        var l = 65 + Math.round(Math.random() * 25);
+        var str = String.fromCharCode(i, j, k, l);
+        return str;
+    }
+
+    function submitForm() {
+        var userName = document.forms[0].UserName.value;
+        var password = document.forms[0].Password.value;
+        var validate1 = document.forms[0].validate1.value;
+        var validate = document.forms[0].validate.value;
+        if(userName == "") {
+            alert("请输入用户名!");
+            document.forms[0].UserName.focus();
+            return false;
+        } else if(password == "") {
+            alert("请输入密码!");
+            document.forms[0].Password.focus();
+            return false;
+        } else if(validate1.toLowerCase() != validate.toLowerCase()) {
+            alert("验证码输入错误!");
+            document.forms[0].validate1.focus();
+            return false;
         }
-        else if(password.value=="")
-        {
-          alert("请输入密码!");
-          password.focus();
-        }else if(validate1.value.toLowerCase()!=validate.value.toLowerCase())
-        {
-          alert("验证码输入不对!");
-          validate1.focus();
-        }
-        else
-        document.forms[0].submit();
-      }
-       function create()
-       {
-         var str=getRandom();
-         //alert(str);
-         document.getElementById("validate").value=str;
-       }
-       function getRandom()
-       {
-         var i=65+Math.round(Math.random()*25);
-         var j=97+Math.round(Math.random()*25);
-         var k=48+Math.round(Math.random()*9);
-         var l=65+Math.round(Math.random()*25);
-         var str = String.fromCharCode(i,j,k,l);
-         return str;
-       }
-      
-  </script>
+        return true;
+    }
+</script>
 </head>
-<body bgColor="#eef8e0" leftMargin="0" topMargin="0" MARGINWIDTH="0" MARGINHEIGHT="0" onload="create()">
-  
-  <TABLE cellSpacing=0 cellPadding=0 width=1004 border=0>
-  <TBODY>
-  <TR>
-    <TD colSpan=6><IMG height=92 alt="" src="../images/crm_1.gif" 
-    width=345></TD>
-    <TD colSpan=4><IMG height=92 alt="" src="../images/crm_2.gif" 
-    width=452></TD>
-    <TD><IMG height=92 alt="" src="../images/crm_3.gif" width=207></TD></TR>
-  <TR>
-    <TD colSpan=6><IMG height=98 alt="" src="../images/crm_4.gif" 
-    width=345></TD>
-    <TD colSpan=4><IMG height=98 alt="" src="../images/crm_5.gif" 
-    width=452></TD>
-    <TD><IMG height=98 alt="" src="../images/crm_6.gif" width=207></TD></TR>
-  <TR>
-    <TD rowSpan=5><IMG height=370 alt="" src="../images/crm_7.gif" 
-    width=59></TD>
-    <TD colSpan=5><IMG height=80 alt="" src="../images/crm_8.gif" 
-    width=286></TD>
-    <TD colSpan=4><IMG height=80 alt="" src="../images/crm_9.gif" 
-    width=452></TD>
-    <TD><IMG height=80 alt="" src="../images/crm_10.gif" width=207></TD></TR>
-  <TR>
-    <TD><IMG height=110 alt="" src="../images/crm_11.gif" width=127></TD>
-    <TD background=../images/crm_12.gif colSpan=6>
-      <TABLE id=table1 cellSpacing=0 cellPadding=0 width="98%" border=0>
-        <TBODY>
-        <TR>
-          <TD>
-           <form name="adminlogin" action="<%=request.getContextPath()%>/AdminLoginServlet" method="post">
-            <table id="table2" cellSpacing="1" cellPadding="0" width="100%"  border="0">
-            <tbody>
-              <tr>
-                <td align="middle" width="81"><font color="#ffffff">用户名：</font></td>
-                <td><input class="regtxt" type="text" name="UserName" id="UserName"/></td>
-              </tr>
-              <tr>
-                <td align="middle" width="81"><font color="#ffffff">密 &nbsp;&nbsp;码：</font></td>
-                <td><input class="regtxt" type="password" name="Password" id="Password"/></td>
-              </tr>
-              <tr>
-                <td align="middle" width="81"><font color="#ffffff">验证码：</font></td>
-                <td>
-				  <input type="text" id="validate1" style="width:80px;"/>&nbsp;&nbsp;
-				  <input type="text" id="validate" readonly="readonly"/>	
-				  <a href="javascript:create();" style="color:blue;">换一张</a>		
-				 </td>
-               </tr>
-              </tbody>
-              </table>
-              </form>
-              </TD></TR></TBODY></TABLE>
-			  </TD>
-    <TD colSpan=2 rowSpan=2><IMG height=158 alt="" 
-      src="../images/crm_13.gif" width=295></TD>
-    <TD rowSpan=2><IMG height=158 alt="" src="../images/crm_14.gif" 
-      width=207></TD></TR>
-  <TR>
-    <TD rowSpan=3><IMG height=180 alt="" src="../images/crm_15.gif" 
-      width=127></TD>
-    <TD rowSpan=3><IMG height=180 alt="" src="../images/crm_16.gif" 
-    width=24></TD>
-    <TD>
-      <INPUT title="登录" type="image" height="48" alt="" width="86" src="../images/crm_17.gif" name="imagesubmit" onclick="submit()"></TD>
-    <TD><IMG height=48 alt="" src="../images/crm_18.gif" width=21></TD>
-    <TD colSpan=2><a href="../index.jsp"><img title="返回首页" height="48" alt="" src="../images/crm_19.gif" width=84 border="0"></a></TD>
-    <TD><IMG height=48 alt="" src="../images/crm_20.gif" width=101></TD></TR>
-  <TR>
-    <TD colSpan=5 rowSpan=2><IMG height=132 alt="" 
-      src="../images/crm_21.gif" width=292></TD>
-    <TD rowSpan=2><IMG height=132 alt="" src="../images/crm_22.gif" 
-      width=170></TD>
-    <TD colSpan=2><IMG height=75 alt="" src="../images/crm_23.gif" 
-    width=332></TD></TR>
-  <TR>
-    <TD colSpan=2><IMG height=57 alt="" src="../images/crm_24.gif" 
-    width=332></TD></TR>
-  <TR>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=59></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=127></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=24></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=86></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=21></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=28></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=56></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=101></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=170></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" width=125></TD>
-    <TD><IMG height=1 alt="" src="../images/spacer.gif" 
-  width=207></TD></TR></TBODY></TABLE>
-  <%
-     String flag = request.getParameter("flag");
-     if(flag!=null&&flag.equals("error"))
-     {
-  %>
-  <script type="text/javascript">
-    alert("用户名或密码错误!");
-  </script>
-  <%}%>
+<body class="login-page" onload="createCaptcha()">
+    <div class="login-container">
+        <div class="login-header">
+            <h2>管理员登录</h2>
+            <p>在线考试系统 Admin Login</p>
+        </div>
+        <div class="login-body">
+            <form name="loginForm" action="<%=path%>/AdminLoginServlet" method="post" onsubmit="return submitForm()">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <input type="text" name="UserName" class="form-input" placeholder="请输入用户名" autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <input type="password" name="Password" class="form-input" placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">验证码</label>
+                    <div class="captcha-box">
+                        <input type="text" name="validate1" class="form-input" placeholder="输入验证码" style="flex: 1;">
+                        <input type="text" name="validate" id="validate" class="captcha-code" readonly onclick="createCaptcha()" title="点击刷新">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" style="width: 100%; padding: 0.875rem;">
+                    登录
+                </button>
+            </form>
+        </div>
+        <div class="login-footer">
+            <a href="<%=path%>/index.jsp">← 返回首页</a>
+        </div>
+    </div>
+
+    <%
+        String flag = request.getParameter("flag");
+        if(flag != null && flag.equals("error")) {
+    %>
+    <script type="text/javascript">
+        alert("用户名或密码错误!");
+    </script>
+    <% } %>
 </body>
 </html>
